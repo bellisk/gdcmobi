@@ -4,155 +4,89 @@ import pypub
 import progressbar
 import os
 import subprocess
-
-chapter_urls = [
-    "https://exiledrebelsscanlations.com/novels/grandmaster-of-demonic-cultivation/",
-    "https://exiledrebelsscanlations.com/gdc-character-and-sect-guide/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-1/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-2/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-3/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-4/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-5/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-6/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-7/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-8/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-9/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-10/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-11/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-12/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-13/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-14/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-15/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-16/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-17/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-18/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-19/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-20/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-21/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-22/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-23/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-24/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-25/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-26/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-27/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-28/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-29/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-30/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-31/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-32/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-33/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-34/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-35/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-36/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-37/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-38/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-39/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-40/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-41/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-42/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-43/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-44/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-45/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-46/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-47/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-48/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-49/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-50/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-51/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-52/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-53/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-54/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-55/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-56/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-57/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-58/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-59/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-60/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-61/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-62/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-63/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-64/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-65/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-66/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-67/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-68/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-69/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-70/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-71/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-72/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-73/",
-    "https://exiledrebelsscanlations.com/gdc-chapter/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-75/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-76/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-77/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-78/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-79/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-80/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-81/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-82/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-83/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-84/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-85/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-86/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-87/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-88/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-89/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-90/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-91/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-92/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-93/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-94/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-95/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-96/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-97/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-98/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-99/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-100/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-101/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-102/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-103/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-104/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-105/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-106/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-107/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-108/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-109/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-110/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-111/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-112/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-113/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-113-5/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-114/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-115/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-116/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-117/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-118/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-119/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-120/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-120-5/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-121/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-122/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-123/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-124/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-125/",
-    "https://exiledrebelsscanlations.com/gdc-chapter-126/",
-]
+import requests
+from bs4 import BeautifulSoup, element
 
 
-def create_epub():
+index_url = "https://exiledrebelsscanlations.com/novels/grandmaster-of-demonic-cultivation/"
+
+
+def get_chapter_urls(index_soup):
+    chapter_urls = []
+    flrichtext = index_soup.find_all("div", class_="fl-rich-text")[0]
+    for tag in flrichtext.contents:
+        if type(tag) == element.Tag and tag.get_text().startswith("CHAPTERS"):
+            break
+
+    while tag:
+        if type(tag) is element.NavigableString:
+            tag = tag.next_sibling
+            continue
+
+        catlists = tag.find_all("div", class_="lcp_catlist")
+        if len(catlists) > 0:
+            # This is the actual chapter list
+            chapter_urls.extend([link.a.get('href') for link in catlists[0]])
+        elif tag.a:
+            # For GDC, there is an extra link in between the heading and chapter list.
+            # Let's get that too.
+            chapter_urls.append(tag.a.get("href"))
+
+        last_tag = tag
+        tag = tag.next_sibling
+        if type(last_tag) == element.Tag:
+            last_tag.decompose()
+
+    return chapter_urls
+
+
+def remove_cruft(page_soup):
+    to_remove = []
+
+    content = page_soup.find_all("div", class_="entry-content")[0]
+    for tag in content.contents:
+        if type(tag) == element.Tag:
+            if "fl-builder-content" not in tag.get("class", []) and "wtr-content" != tag.get("id"):
+                to_remove.append(tag)
+
+    to_remove.extend(
+        page_soup.find_all("header", class_="entry-header")
+    )
+    to_remove.extend(
+        page_soup.find_all("footer", class_="entry-footer")
+    )
+
+    for tag in to_remove:
+        tag.decompose()
+
+    return page_soup
+
+
+def create_epub_and_get_filename():
     epub = pypub.Epub(
         "Grandmaster of Demonic Cultivation",
         creator="Mo Xiang Tong Xiu (translated by Exiled Rebels Scanlations)",
         publisher="Exiled Rebels Scanlations"
     )
 
-    print("Adding chapters to epub")
+    r = requests.get(index_url)
+    soup = BeautifulSoup(r.text, "html.parser")
+
+    chapter_urls = get_chapter_urls(soup)
+
+    print("Adding intro page to epub")
+    epub.add_chapter(pypub.create_chapter_from_string(str(remove_cruft(soup))))
+
+    print("Adding {count} chapters to epub".format(count=len(chapter_urls)))
     progbar = progressbar.ProgressBar(len(chapter_urls))
     progbar.setup()
 
     for url in chapter_urls:
         try:
-            c = pypub.create_chapter_from_url(url)
+            r = requests.get(url)
+            soup = BeautifulSoup(r.text, "html.parser")
+
+            c = pypub.create_chapter_from_string(str(remove_cruft(soup)))
             epub.add_chapter(c)
             progbar.update(chunk=1)
         except ValueError:
@@ -161,22 +95,21 @@ def create_epub():
     progbar.finish()
 
     print("Creating epub")
-    epub_path = epub.create_epub(os.getcwd())
-    print(epub_path)
+    return epub.create_epub(os.getcwd())
 
 
-def generate_mobi(epub_filename, mobi_filename):
+def generate_mobi(epub_filename):
+    print("Generating mobi from epub")
     with open("/dev/null", "w") as null:
         try:
-            subprocess.run(['kindlegen', '-c2', '-o', mobi_filename, epub_filename])
+            subprocess.run(['kindlegen', '-c2', epub_filename])
         except OSError as e:
             if e.errno == errno.ENOENT:
-                print
-                "Warning: kindlegen was not on your path; not generating .mobi version"
+                print("Couldn't generate mobi! Please add kindlegen to your path and try again")
             else:
                 raise
 
+
 if __name__ == "__main__":
-    print('Starting script')
-    create_epub()
-    print("Done")
+    filename = create_epub_and_get_filename()
+    generate_mobi(filename)
